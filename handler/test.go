@@ -13,6 +13,15 @@ type TestParam struct {
 	Name    string `json:"name" validate:"required"`
 }
 
+// Name will print hello name
+// @Summary Print
+// @Accept json
+// @Tags Name
+// @Security Bearer
+// @Produce  json
+// @Param name path string true "name"
+// @Resource Name
+// @Router /insert [post]
 func Test(c *gin.Context) {
 	var json TestParam
 	c.BindJSON(&json)
