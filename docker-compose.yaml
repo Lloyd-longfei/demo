@@ -1,0 +1,55 @@
+version: "3"
+services:
+  redis:
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"  
+    networks:
+      - golang_backend
+    volumes: 
+      - ../data/redis:/data
+  
+  golang:
+    container_name: golang_service
+    build: ./docker/golang 
+    volumes:
+      - ../demo:/go/src/demo
+    entrypoint: /go/src/demo/docker/golang/build.sh
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"  
+    networks:
+      - golang_backend
+     # - frontend
+  mysql:
+    container_name: mysql_service
+    image: mariadb:10.3
+    volumes:
+      - ../data/mysql:/var/lib/mysql
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"  
+    environment:
+      MYSQL_ROOT_PASSWORD: juzhi_test
+      MYSQL_USER: juzhi_dev
+      MYSQL_PASSWORD: juzhi_administrator
+      TZ: 'Asia/Shanghai'
+      MYSQL_ROOT_HOST: "%"
+
+  #nginx_server:
+   # container_name: nginx_proxy
+   # image: nginx
+   # ports:
+   #   - "80:80"
+   # expose:
+    #  - "80"
+   # volumes:
+    #  - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf 
+   # networks: 
+    #  - frontend
+networks:
+  golang_backend:
+ # frontend:
